@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/BurntSushi/toml"
 	"github.com/HMasataka/faker"
 	"github.com/HMasataka/gofiles"
@@ -12,7 +10,7 @@ import (
 func main() {
 	b, err := gofiles.ReadFileAll("data.toml")
 	if err != nil {
-		panic(err)
+		log.Fatal().Err(err).Send()
 	}
 
 	var t faker.Toml
@@ -20,5 +18,13 @@ func main() {
 		log.Fatal().Err(err).Send()
 	}
 
-	fmt.Printf("%+v", t)
+	conn, err := faker.NewConnection(&t.DB)
+	if err != nil {
+		log.Fatal().Err(err).Send()
+	}
+	defer conn.Close()
+
+	if err = conn.Ping(); err != nil {
+		log.Fatal().Err(err).Send()
+	}
 }
