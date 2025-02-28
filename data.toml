@@ -7,3 +7,13 @@ net = 'tcp'
 parseTime = false
 location = 'Asia/Tokyo'
 allowNativePasswords = true
+
+[tables]
+[[tables.table]]
+name = 'user'
+
+[[tables.table.column]]
+name = '1'
+
+[[tables.table.column]]
+name = '2'

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/BurntSushi/toml"
 	"github.com/HMasataka/faker"
 	"github.com/HMasataka/gofiles"
@@ -27,4 +29,6 @@ func main() {
 	if err = conn.Ping(); err != nil {
 		log.Fatal().Err(err).Send()
 	}
+
+	fmt.Println(t.Tables)
 }
