@@ -13,7 +13,21 @@ allowNativePasswords = true
 name = 'user'
 
 [[tables.table.column]]
-name = '1'
+name = 'id'
+valueType = 'fakeit'
+value = '????????????????????????????????????' # 36文字
 
 [[tables.table.column]]
-name = '2'
+name = 'name'
+valueType = 'fakeit'
+value = '{person.first} {person.last}'
+
+[[tables.table.column]]
+name = 'icon'
+valueType = 'fakeit'
+value = '{object.url}'
+
+[[tables.table.column]]
+name = 'created_at'
+valueType = 'value'
+value = 'datetime'

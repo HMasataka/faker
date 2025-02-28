@@ -6,6 +6,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/HMasataka/faker"
 	"github.com/HMasataka/gofiles"
+	"github.com/brianvoe/gofakeit/v7"
 	"github.com/rs/zerolog/log"
 )
 
@@ -31,4 +32,6 @@ func main() {
 	}
 
 	fmt.Println(t.Tables)
+	fmt.Println(gofakeit.FuncLookups)
+	fmt.Println(gofakeit.Generate("{uuid}"))
 }
