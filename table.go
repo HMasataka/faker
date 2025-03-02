@@ -1,7 +1,7 @@
 package faker
 
 type Tables struct {
-	Table []Table `toml:"table"`
+	Table []*Table `toml:"table"`
 }
 
 type Table struct {

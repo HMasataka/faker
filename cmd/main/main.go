@@ -9,6 +9,7 @@ import (
 	"github.com/HMasataka/faker"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/rs/zerolog/log"
+	"github.com/samber/lo/mutable"
 )
 
 func main() {
@@ -27,54 +28,84 @@ func main() {
 		log.Fatal().Err(err).Send()
 	}
 
-	seen := make(map[string]map[string]any)
+	seen := make(map[string][]map[string]any)
+	queue := t.Tables.Table
+	var deletable []int
 
-	for _, table := range t.Tables.Table {
-		columnNames := make([]string, len(table.Column))
-		columnValues := make([]any, len(table.Column))
-		fmt.Println(table.Name, table.Depends)
+	for len(queue) > 0 {
+		for i, table := range queue {
+			columnNames := make([]string, len(table.Column))
+			columnValues := make([]any, len(table.Column))
 
-		seenTable := make(map[string]any)
-		seen[table.Name] = seenTable
+			if !isAllSeen(seen, table.Depends) {
+				queue = append(queue, table)
+				continue
+			}
 
-		for i, column := range table.Column {
-			columnNames[i] = column.Name
+			for i, column := range table.Column {
+				columnNames[i] = column.Name
+				record := make(map[string]any)
 
-			switch column.ValueType {
-			case "fakeit":
-				value, err := gofakeit.Generate(column.Value)
-				if err != nil {
-					log.Fatal().Err(err).Send()
+				switch column.ValueType {
+				case "fakeit":
+					value, err := gofakeit.Generate(column.Value)
+					if err != nil {
+						log.Fatal().Err(err).Send()
+					}
+
+					columnValues[i] = value
+					record[column.Name] = value
+				case "fk":
+					sp := strings.Split(column.Value, ":")
+					tableName, columnName := sp[0], sp[1]
+					value := seen[tableName][0][columnName]
+
+					columnValues[i] = value
+					record[column.Name] = value
+				case "value":
+					value := time.Now()
+					columnValues[i] = value
+					record[column.Name] = value
 				}
 
-				columnValues[i] = value
-				seen[table.Name][column.Name] = value
-			case "fk":
-				sp := strings.Split(column.Value, ":")
-				tableName, columnName := sp[0], sp[1]
-				value := seen[tableName][columnName]
-
-				columnValues[i] = value
-				seen[table.Name][column.Name] = value
-			case "value":
-				value := time.Now()
-				columnValues[i] = value
-				seen[table.Name][column.Name] = value
+				seen[table.Name] = append(seen[table.Name], record)
 			}
+
+			questions := repeat(len(table.Column), "?")
+			question := strings.Join(questions, ",")
+
+			query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames, ","), question)
+
+			log.Info().Str("query", query).Any("values", columnValues).Send()
+
+			_, err := conn.ExecContext(context.Background(), query, columnValues...)
+			if err != nil {
+				log.Fatal().Err(err).Send()
+			}
+
+			deletable = append(deletable, i)
 		}
 
-		questions := repeat(len(table.Column), "?")
-		question := strings.Join(questions, ",")
+		mutable.Reverse(deletable)
 
-		query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames, ","), question)
-
-		log.Info().Str("query", query).Any("values", columnValues).Send()
-
-		_, err := conn.ExecContext(context.Background(), query, columnValues...)
-		if err != nil {
-			log.Fatal().Err(err).Send()
+		for _, d := range deletable {
+			queue = remove(queue, d)
 		}
 	}
+}
+
+func isAllSeen(seen map[string][]map[string]any, keys []string) bool {
+	for i := range keys {
+		if _, ok := seen[keys[i]]; !ok {
+			return false
+		}
+	}
+
+	return true
+}
+
+func remove(slice []*faker.Table, s int) []*faker.Table {
+	return append(slice[:s], slice[s+1:]...)
 }
 
 func repeat[T any](count int, v ...T) []T {
