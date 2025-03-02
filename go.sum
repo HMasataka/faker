@@ -4,6 +4,8 @@ github.com/BurntSushi/toml v1.4.0 h1:kuoIxZQy2WRRk1pttg9asf+WVv6tWQuBNVmK8+nqPr0
 github.com/BurntSushi/toml v1.4.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
 github.com/HMasataka/gofiles v0.0.0-20250212061118-9eca7a731b4d h1:+B3BKg3UYK10yCJW94h+xAyCkp22Y/eR8VZN3ZdZs04=
 github.com/HMasataka/gofiles v0.0.0-20250212061118-9eca7a731b4d/go.mod h1:zeSP9F2yN6voH7RrzRvGQK4bzwgFruzKCXUxDgXJYL8=
+github.com/HMasataka/gofiles v0.0.0-20250302080934-80711e875bd5 h1:ECo4yoLxl+FW4EY0cIAwBsbLd/lfShA6Pl0mvlS26k8=
+github.com/HMasataka/gofiles v0.0.0-20250302080934-80711e875bd5/go.mod h1:zeSP9F2yN6voH7RrzRvGQK4bzwgFruzKCXUxDgXJYL8=
 github.com/brianvoe/gofakeit/v7 v7.2.1 h1:AGojgaaCdgq4Adzrd2uWdbGNDyX6MWNhHdQBraNfOHI=
 github.com/brianvoe/gofakeit/v7 v7.2.1/go.mod h1:QXuPeBw164PJCzCUZVmgpgHJ3Llj49jSLVkKPMtxtxA=
 github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=

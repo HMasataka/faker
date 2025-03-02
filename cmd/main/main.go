@@ -38,11 +38,10 @@ func main() {
 		log.Fatal().Err(err).Send()
 	}
 
-	tables, err := faker.NewTables("data.toml")
+	tables, err := faker.NewTables("tables")
 	if err != nil {
 		log.Fatal().Err(err).Send()
 	}
-	fmt.Println(tables)
 
 	seen := make(map[string][]map[string]any)
 	queue := tables.Tables

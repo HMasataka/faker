@@ -1,18 +1,33 @@
 package faker
 
 import (
+	"fmt"
+
 	"github.com/BurntSushi/toml"
 	"github.com/HMasataka/gofiles"
 )
 
-func NewTables(path string) (Tables, error) {
-	b, err := gofiles.ReadFileAll(path)
+func NewTables(dir string) (Tables, error) {
+	filePaths, err := gofiles.ListFilesYield(dir)
 	if err != nil {
 		return Tables{}, err
 	}
 
+	var data string
+
+	for filePath := range filePaths {
+		b, err := gofiles.ReadFileAll(filePath)
+		if err != nil {
+			return Tables{}, err
+		}
+
+		data += string(b)
+	}
+
+	fmt.Println(data)
+
 	var t Tables
-	if _, err := toml.Decode(string(b), &t); err != nil {
+	if _, err := toml.Decode(data, &t); err != nil {
 		return Tables{}, err
 	}
 
