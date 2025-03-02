@@ -39,6 +39,7 @@ func main() {
 	for _, table := range t.Tables.Table {
 		columnNames := make([]string, len(table.Column))
 		columnValues := make([]any, len(table.Column))
+		fmt.Println(table.Name, table.Depends)
 
 		seenTable := make(map[string]any)
 		seen[table.Name] = seenTable

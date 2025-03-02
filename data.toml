@@ -29,6 +29,7 @@ value = '{now}'
 
 [[tables.table]]
 name = 'user'
+depends = ['account']
 
 [[tables.table.column]]
 name = 'id'

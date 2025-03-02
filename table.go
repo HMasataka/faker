@@ -5,8 +5,9 @@ type Tables struct {
 }
 
 type Table struct {
-	Name   string   `toml:"name"`
-	Column []Column `toml:"column"`
+	Name    string   `toml:"name"`
+	Depends []string `toml:"depends"`
+	Column  []Column `toml:"column"`
 }
 
 type Column struct {
