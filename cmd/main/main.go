@@ -109,7 +109,7 @@ func main() {
 	}
 }
 
-func remove(slice []*faker.Table, s int) []*faker.Table {
+func remove[T any](slice []T, s int) []T {
 	return append(slice[:s], slice[s+1:]...)
 }
 
