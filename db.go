@@ -10,21 +10,21 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func NewDB(path string) (DB, error) {
+func NewDataBaseConfig(path string) (DataBaseConfig, error) {
 	b, err := gofiles.ReadFileAll(path)
 	if err != nil {
-		return DB{}, err
+		return DataBaseConfig{}, err
 	}
 
-	var db DB
+	var db DataBaseConfig
 	if _, err := toml.Decode(string(b), &db); err != nil {
-		return DB{}, err
+		return DataBaseConfig{}, err
 	}
 
 	return db, nil
 }
 
-type DB struct {
+type DataBaseConfig struct {
 	Name                 string `toml:"name"`
 	User                 string `toml:"user"`
 	Password             string `toml:"password"`
@@ -36,7 +36,7 @@ type DB struct {
 	AllowNativePasswords bool   `toml:"allowNativePasswords"`
 }
 
-func NewConnection(cfg *DB) (*sql.DB, error) {
+func NewConnection(cfg *DataBaseConfig) (*sql.DB, error) {
 	jst, err := time.LoadLocation(cfg.Location)
 	if err != nil {
 		return nil, err

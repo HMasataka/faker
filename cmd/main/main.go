@@ -14,7 +14,7 @@ import (
 )
 
 func newConn() (*sql.DB, error) {
-	db, err := faker.NewDB("db.toml")
+	db, err := faker.NewDataBaseConfig("db.toml")
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func main() {
 		log.Fatal().Err(err).Send()
 	}
 
-	seen := make(map[string][]map[string]any)
+	seen := make(faker.DB)
 	queue := tables.Tables
 
 	for len(queue) > 0 {
@@ -59,7 +59,7 @@ func main() {
 
 			for i, column := range table.Column {
 				columnNames[i] = column.Name
-				record := make(map[string]any)
+				record := make(faker.Record)
 
 				switch column.ValueType {
 				case "fakeit":
@@ -109,7 +109,7 @@ func main() {
 	}
 }
 
-func isAllSeen(seen map[string][]map[string]any, keys []string) bool {
+func isAllSeen(seen faker.DB, keys []string) bool {
 	for i := range keys {
 		if _, ok := seen[keys[i]]; !ok {
 			return false
