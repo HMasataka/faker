@@ -10,12 +10,30 @@ allowNativePasswords = true
 
 [tables]
 [[tables.table]]
+name = 'account'
+
+[[tables.table.column]]
+name = 'user_id'
+valueType = 'fakeit'
+value = '{digitn:36}'
+
+[[tables.table.column]]
+name = 'firebase_id'
+valueType = 'fakeit'
+value = '{digitn:36}'
+
+[[tables.table.column]]
+name = 'created_at'
+valueType = 'value'
+value = '{now}'
+
+[[tables.table]]
 name = 'user'
 
 [[tables.table.column]]
 name = 'id'
-valueType = 'fakeit'
-value = '{digitn:36}'
+valueType = 'fk'
+value = 'account:user_id'
 
 [[tables.table.column]]
 name = 'name'
