@@ -10,24 +10,6 @@ allowNativePasswords = true
 
 [tables]
 [[tables.table]]
-name = 'account'
-
-[[tables.table.column]]
-name = 'user_id'
-valueType = 'fakeit'
-value = '{digitn:36}'
-
-[[tables.table.column]]
-name = 'firebase_id'
-valueType = 'fakeit'
-value = '{digitn:36}'
-
-[[tables.table.column]]
-name = 'created_at'
-valueType = 'value'
-value = '{now}'
-
-[[tables.table]]
 name = 'user'
 depends = ['account']
 
@@ -45,6 +27,24 @@ value = '{name}'
 name = 'icon'
 valueType = 'fakeit'
 value = '{url}'
+
+[[tables.table.column]]
+name = 'created_at'
+valueType = 'value'
+value = '{now}'
+
+[[tables.table]]
+name = 'account'
+
+[[tables.table.column]]
+name = 'user_id'
+valueType = 'fakeit'
+value = '{digitn:36}'
+
+[[tables.table.column]]
+name = 'firebase_id'
+valueType = 'fakeit'
+value = '{digitn:36}'
 
 [[tables.table.column]]
 name = 'created_at'

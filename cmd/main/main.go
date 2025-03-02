@@ -30,15 +30,15 @@ func main() {
 
 	seen := make(map[string][]map[string]any)
 	queue := t.Tables.Table
-	var deletable []int
 
 	for len(queue) > 0 {
+		var deletable []int
+
 		for i, table := range queue {
 			columnNames := make([]string, len(table.Column))
 			columnValues := make([]any, len(table.Column))
 
 			if !isAllSeen(seen, table.Depends) {
-				queue = append(queue, table)
 				continue
 			}
 
