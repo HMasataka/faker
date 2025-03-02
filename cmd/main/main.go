@@ -6,21 +6,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/BurntSushi/toml"
 	"github.com/HMasataka/faker"
-	"github.com/HMasataka/gofiles"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/rs/zerolog/log"
 )
 
 func main() {
-	b, err := gofiles.ReadFileAll("data.toml")
+	t, err := faker.NewTomlFromPath("data.toml")
 	if err != nil {
-		log.Fatal().Err(err).Send()
-	}
-
-	var t faker.Toml
-	if _, err := toml.Decode(string(b), &t); err != nil {
 		log.Fatal().Err(err).Send()
 	}
 
