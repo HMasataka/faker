@@ -1,0 +1,8 @@
+name = 'db'
+user = 'user'
+password = 'password'
+addr = 'localhost:3306'
+net = 'tcp'
+parseTime = false
+location = 'Asia/Tokyo'
+allowNativePasswords = true

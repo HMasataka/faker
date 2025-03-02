@@ -1,52 +1,41 @@
-[db]
-name = 'db'
-user = 'user'
-password = 'password'
-addr = 'localhost:3306'
-net = 'tcp'
-parseTime = false
-location = 'Asia/Tokyo'
-allowNativePasswords = true
-
-[tables]
-[[tables.table]]
+[[tables]]
 name = 'user'
 depends = ['account']
 
-[[tables.table.column]]
+[[tables.column]]
 name = 'id'
 valueType = 'fk'
 value = 'account:user_id'
 
-[[tables.table.column]]
+[[tables.column]]
 name = 'name'
 valueType = 'fakeit'
 value = '{name}'
 
-[[tables.table.column]]
+[[tables.column]]
 name = 'icon'
 valueType = 'fakeit'
 value = '{url}'
 
-[[tables.table.column]]
+[[tables.column]]
 name = 'created_at'
 valueType = 'value'
 value = '{now}'
 
-[[tables.table]]
+[[tables]]
 name = 'account'
 
-[[tables.table.column]]
+[[tables.column]]
 name = 'user_id'
 valueType = 'fakeit'
 value = '{digitn:36}'
 
-[[tables.table.column]]
+[[tables.column]]
 name = 'firebase_id'
 valueType = 'fakeit'
 value = '{digitn:36}'
 
-[[tables.table.column]]
+[[tables.column]]
 name = 'created_at'
 valueType = 'value'
 value = '{now}'

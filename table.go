@@ -1,7 +1,26 @@
 package faker
 
+import (
+	"github.com/BurntSushi/toml"
+	"github.com/HMasataka/gofiles"
+)
+
+func NewTables(path string) (Tables, error) {
+	b, err := gofiles.ReadFileAll(path)
+	if err != nil {
+		return Tables{}, err
+	}
+
+	var t Tables
+	if _, err := toml.Decode(string(b), &t); err != nil {
+		return Tables{}, err
+	}
+
+	return t, nil
+}
+
 type Tables struct {
-	Table []*Table `toml:"table"`
+	Tables []*Table `toml:"tables"`
 }
 
 type Table struct {

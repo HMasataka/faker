@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"strings"
 	"time"
@@ -12,13 +13,22 @@ import (
 	"github.com/samber/lo/mutable"
 )
 
-func main() {
-	t, err := faker.NewTomlFromPath("data.toml")
+func newConn() (*sql.DB, error) {
+	db, err := faker.NewDB("db.toml")
 	if err != nil {
-		log.Fatal().Err(err).Send()
+		return nil, err
 	}
 
-	conn, err := faker.NewConnection(&t.DB)
+	conn, err := faker.NewConnection(&db)
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
+}
+
+func main() {
+	conn, err := newConn()
 	if err != nil {
 		log.Fatal().Err(err).Send()
 	}
@@ -28,8 +38,14 @@ func main() {
 		log.Fatal().Err(err).Send()
 	}
 
+	tables, err := faker.NewTables("data.toml")
+	if err != nil {
+		log.Fatal().Err(err).Send()
+	}
+	fmt.Println(tables)
+
 	seen := make(map[string][]map[string]any)
-	queue := t.Tables.Table
+	queue := tables.Tables
 
 	for len(queue) > 0 {
 		var deletable []int
