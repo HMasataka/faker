@@ -15,19 +15,19 @@ name = 'user'
 [[tables.table.column]]
 name = 'id'
 valueType = 'fakeit'
-value = '????????????????????????????????????' # 36文字
+value = '{digitn:36}'
 
 [[tables.table.column]]
 name = 'name'
 valueType = 'fakeit'
-value = '{person.first} {person.last}'
+value = '{name}'
 
 [[tables.table.column]]
 name = 'icon'
 valueType = 'fakeit'
-value = '{object.url}'
+value = '{url}'
 
 [[tables.table.column]]
 name = 'created_at'
 valueType = 'value'
-value = 'datetime'
+value = '{now}'

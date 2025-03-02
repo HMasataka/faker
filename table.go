@@ -10,5 +10,7 @@ type Table struct {
 }
 
 type Column struct {
-	Name string `toml:"name"`
+	Name      string `toml:"name"`
+	ValueType string `toml:"valueType"`
+	Value     string `toml:"value"`
 }
