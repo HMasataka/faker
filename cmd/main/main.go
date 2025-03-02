@@ -53,7 +53,7 @@ func main() {
 			columnNames := make([]string, len(table.Column))
 			columnValues := make([]any, len(table.Column))
 
-			if !isAllSeen(seen, table.Depends) {
+			if !seen.HasAll(table.Depends) {
 				continue
 			}
 
@@ -107,16 +107,6 @@ func main() {
 			queue = remove(queue, d)
 		}
 	}
-}
-
-func isAllSeen(seen faker.DB, keys []string) bool {
-	for i := range keys {
-		if _, ok := seen[keys[i]]; !ok {
-			return false
-		}
-	}
-
-	return true
 }
 
 func remove(slice []*faker.Table, s int) []*faker.Table {
