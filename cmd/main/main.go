@@ -60,14 +60,10 @@ func main() {
 			columnNames := make(faker.ColumnNames, len(record))
 			values := make([]any, len(record))
 
-			if err := keyValueIndex(record, func(i int, columnName faker.ColumnName, value any) error {
+			keyValueIndex(record, func(i int, columnName faker.ColumnName, value any) {
 				columnNames[i] = columnName
 				values[i] = value
-
-				return nil
-			}); err != nil {
-				log.Fatal().Err(err).Send()
-			}
+			})
 
 			questions := repeat(len(table.Column), "?")
 			question := strings.Join(questions, ",")
@@ -91,16 +87,12 @@ func main() {
 	}
 }
 
-func keyValueIndex[T comparable, V any](m map[T]V, fn func(idx int, key T, value V) error) error {
+func keyValueIndex[T comparable, V any](m map[T]V, fn func(idx int, key T, value V)) {
 	idx := 0
 	for key, value := range m {
-		if err := fn(idx, key, value); err != nil {
-			return err
-		}
+		fn(idx, key, value)
 		idx++
 	}
-
-	return nil
 }
 
 func remove[T any](slice []T, s int) []T {
