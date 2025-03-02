@@ -1,13 +1,15 @@
 package faker
 
-type DB map[string]Records
+type TableName string
 
-func (d DB) Has(key string) bool {
+type DB map[TableName]Records
+
+func (d DB) Has(key TableName) bool {
 	_, has := d[key]
 	return has
 }
 
-func (d DB) HasAll(keys []string) bool {
+func (d DB) HasAll(keys []TableName) bool {
 	for i := range keys {
 		if has := d.Has(keys[i]); !has {
 			return false

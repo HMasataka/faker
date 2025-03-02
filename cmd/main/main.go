@@ -72,7 +72,7 @@ func main() {
 					record[column.Name] = value
 				case "fk":
 					sp := strings.Split(column.Value, ":")
-					tableName, columnName := sp[0], sp[1]
+					tableName, columnName := faker.TableName(sp[0]), sp[1]
 					value := seen[tableName][0][columnName]
 
 					columnValues[i] = value

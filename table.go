@@ -39,9 +39,9 @@ type Tables struct {
 }
 
 type Table struct {
-	Name    string   `toml:"name"`
-	Depends []string `toml:"depends"`
-	Column  []Column `toml:"column"`
+	Name    TableName   `toml:"name"`
+	Depends []TableName `toml:"depends"`
+	Column  []Column    `toml:"column"`
 }
 
 type Column struct {
