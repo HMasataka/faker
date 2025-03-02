@@ -5,10 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/HMasataka/faker"
-	"github.com/brianvoe/gofakeit/v7"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo/mutable"
 )
@@ -43,47 +41,32 @@ func main() {
 		log.Fatal().Err(err).Send()
 	}
 
-	seen := make(faker.DB)
 	queue := tables.Tables
+	fake := faker.NewFaker()
 
 	for len(queue) > 0 {
 		var deletable []int
 
 		for i, table := range queue {
-			columnNames := make(faker.ColumnNames, len(table.Column))
-			columnValues := make([]any, len(table.Column))
-
-			if !seen.HasAll(table.Depends) {
+			if !fake.HasTables(table.Depends) {
 				continue
 			}
 
-			for i, column := range table.Column {
-				columnNames[i] = column.Name
-				record := make(faker.Record)
+			record, err := fake.NewDummyRecord(table.Name, table.Column)
+			if err != nil {
+				log.Fatal().Err(err).Send()
+			}
 
-				switch column.ValueType {
-				case "fakeit":
-					value, err := gofakeit.Generate(column.Value)
-					if err != nil {
-						log.Fatal().Err(err).Send()
-					}
+			columnNames := make(faker.ColumnNames, len(record))
+			values := make([]any, len(record))
 
-					columnValues[i] = value
-					record[column.Name] = value
-				case "fk":
-					sp := strings.Split(column.Value, ":")
-					tableName, columnName := faker.TableName(sp[0]), faker.ColumnName(sp[1])
-					value := seen[tableName][0][columnName]
+			if err := keyValueIndex(record, func(i int, columnName faker.ColumnName, value any) error {
+				columnNames[i] = columnName
+				values[i] = value
 
-					columnValues[i] = value
-					record[column.Name] = value
-				case "value":
-					value := time.Now()
-					columnValues[i] = value
-					record[column.Name] = value
-				}
-
-				seen[table.Name] = append(seen[table.Name], record)
+				return nil
+			}); err != nil {
+				log.Fatal().Err(err).Send()
 			}
 
 			questions := repeat(len(table.Column), "?")
@@ -91,10 +74,9 @@ func main() {
 
 			query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames.ToStrings(), ","), question)
 
-			log.Info().Str("query", query).Any("values", columnValues).Send()
+			log.Info().Str("query", query).Any("values", values).Send()
 
-			_, err := conn.ExecContext(context.Background(), query, columnValues...)
-			if err != nil {
+			if _, err := conn.ExecContext(context.Background(), query, values...); err != nil {
 				log.Fatal().Err(err).Send()
 			}
 
@@ -107,6 +89,18 @@ func main() {
 			queue = remove(queue, d)
 		}
 	}
+}
+
+func keyValueIndex[T comparable, V any](m map[T]V, fn func(idx int, key T, value V) error) error {
+	idx := 0
+	for key, value := range m {
+		if err := fn(idx, key, value); err != nil {
+			return err
+		}
+		idx++
+	}
+
+	return nil
 }
 
 func remove[T any](slice []T, s int) []T {
