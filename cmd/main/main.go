@@ -50,7 +50,7 @@ func main() {
 		var deletable []int
 
 		for i, table := range queue {
-			columnNames := make([]string, len(table.Column))
+			columnNames := make(faker.ColumnNames, len(table.Column))
 			columnValues := make([]any, len(table.Column))
 
 			if !seen.HasAll(table.Depends) {
@@ -72,7 +72,7 @@ func main() {
 					record[column.Name] = value
 				case "fk":
 					sp := strings.Split(column.Value, ":")
-					tableName, columnName := faker.TableName(sp[0]), sp[1]
+					tableName, columnName := faker.TableName(sp[0]), faker.ColumnName(sp[1])
 					value := seen[tableName][0][columnName]
 
 					columnValues[i] = value
@@ -89,7 +89,7 @@ func main() {
 			questions := repeat(len(table.Column), "?")
 			question := strings.Join(questions, ",")
 
-			query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames, ","), question)
+			query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames.ToStrings(), ","), question)
 
 			log.Info().Str("query", query).Any("values", columnValues).Send()
 

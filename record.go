@@ -2,6 +2,19 @@ package faker
 
 type TableName string
 
+type ColumnName string
+type ColumnNames []ColumnName
+
+func (c ColumnNames) ToStrings() []string {
+	s := make([]string, len(c))
+
+	for i := range c {
+		s[i] = string(c[i])
+	}
+
+	return s
+}
+
 type DB map[TableName]Records
 
 func (d DB) Has(key TableName) bool {
@@ -20,4 +33,4 @@ func (d DB) HasAll(keys []TableName) bool {
 }
 
 type Records []Record
-type Record map[string]any
+type Record map[ColumnName]any
