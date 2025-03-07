@@ -1,5 +1,7 @@
 package faker
 
+import "github.com/HMasataka/perseus"
+
 type TableName string
 
 type ColumnName string
@@ -34,3 +36,16 @@ func (d DB) HasAll(keys []TableName) bool {
 
 type Records []Record
 type Record map[ColumnName]any
+
+func ToColumnNamesAndValues(record Record) (ColumnNames, []any) {
+	columnNames := make(ColumnNames, len(record))
+	values := make([]any, len(record))
+
+	withIndex := perseus.WithIndex(record)
+	for kv := range withIndex {
+		columnNames[kv.Index] = kv.Key
+		values[kv.Index] = kv.Value
+	}
+
+	return columnNames, values
+}

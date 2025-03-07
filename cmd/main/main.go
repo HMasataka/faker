@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/HMasataka/faker"
-	"github.com/HMasataka/perseus"
 	"github.com/HMasataka/ruin"
 	"github.com/rs/zerolog/log"
 )
@@ -61,14 +60,7 @@ func main() {
 			log.Fatal().Err(err).Send()
 		}
 
-		columnNames := make(faker.ColumnNames, len(record))
-		values := make([]any, len(record))
-
-		withIndex := perseus.WithIndex(record)
-		for kv := range withIndex {
-			columnNames[kv.Index] = kv.Key
-			values[kv.Index] = kv.Value
-		}
+		columnNames, values := faker.ToColumnNamesAndValues(record)
 
 		query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames.ToStrings(), ","), faker.BuildQuestionMarks(len(columnNames)))
 
