@@ -70,10 +70,7 @@ func main() {
 			values[kv.Index] = kv.Value
 		}
 
-		questions := perseus.Repeat(len(table.Column), "?")
-		question := strings.Join(questions, ",")
-
-		query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames.ToStrings(), ","), question)
+		query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames.ToStrings(), ","), faker.BuildQuestionMarks(len(columnNames)))
 
 		log.Info().Str("query", query).Any("values", values).Send()
 
