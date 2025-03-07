@@ -4,6 +4,8 @@ github.com/BurntSushi/toml v1.4.0 h1:kuoIxZQy2WRRk1pttg9asf+WVv6tWQuBNVmK8+nqPr0
 github.com/BurntSushi/toml v1.4.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
 github.com/HMasataka/gofiles v0.0.0-20250302080934-80711e875bd5 h1:ECo4yoLxl+FW4EY0cIAwBsbLd/lfShA6Pl0mvlS26k8=
 github.com/HMasataka/gofiles v0.0.0-20250302080934-80711e875bd5/go.mod h1:zeSP9F2yN6voH7RrzRvGQK4bzwgFruzKCXUxDgXJYL8=
+github.com/HMasataka/perseus v0.0.0-20250307122520-eb540b06611e h1:cxWF01UN8xFqHhGyRpvWrJTIdQVm5+nj11llJYuthFQ=
+github.com/HMasataka/perseus v0.0.0-20250307122520-eb540b06611e/go.mod h1:wQTrOzgwK8xGFt+m+86oVIU+FNfQ0FXU/Rw7DtT+4Jc=
 github.com/HMasataka/ruin v0.0.0-20250305041336-db23932b5775 h1:aWeOx2uBTpNnkYBFTNzwsjP8LiQYOB/PSey3LKQf3s8=
 github.com/HMasataka/ruin v0.0.0-20250305041336-db23932b5775/go.mod h1:6qwcVhMYlKwAqfEPnUXLQt/2Qo1+SzWjuFf/ayzy0UI=
 github.com/HMasataka/ruin v0.0.0-20250307120546-eeace576dd69 h1:V8V5F7SW3PQoQc7jhHB8zR+vQXU/gMHNSBR0c0SThIQ=
@@ -31,6 +33,8 @@ github.com/samber/lo v1.49.1 h1:4BIFyVfuQSEpluc7Fua+j1NolZHiEHEpaSEKdsH0tew=
 github.com/samber/lo v1.49.1/go.mod h1:dO6KHFzUKXgP8LDhU0oI8d2hekjXnGOu0DB8Jecxd6o=
 github.com/stretchr/testify v1.10.0 h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=
 github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
+golang.org/x/exp v0.0.0-20250228200357-dead58393ab7 h1:aWwlzYV971S4BXRS9AmqwDLAD85ouC6X+pocatKY58c=
+golang.org/x/exp v0.0.0-20250228200357-dead58393ab7/go.mod h1:BHOTPb3L19zxehTsLoJXVaTktb06DFgmdW6Wb9s8jqk=
 golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.12.0 h1:CM0HF96J0hcLAwsHPJZjfdNzs0gftsLfgKt57wWHJ0o=

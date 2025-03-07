@@ -13,9 +13,11 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
+	github.com/HMasataka/perseus v0.0.0-20250307122520-eb540b06611e // indirect
 	github.com/HMasataka/ruin v0.0.0-20250307120546-eeace576dd69 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
+	golang.org/x/exp v0.0.0-20250228200357-dead58393ab7 // indirect
 	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 )
