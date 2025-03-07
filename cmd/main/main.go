@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/HMasataka/faker"
+	"github.com/HMasataka/ruin"
 	"github.com/rs/zerolog/log"
-	"github.com/samber/lo/mutable"
 )
 
 func newConn() (*sql.DB, error) {
@@ -41,48 +41,42 @@ func main() {
 		log.Fatal().Err(err).Send()
 	}
 
-	queue := tables.Tables
+	queue := ruin.New(tables.Tables)
 	fake := faker.NewFaker()
 
-	for len(queue) > 0 {
-		var deletable []int
-
-		for i, table := range queue {
-			if !fake.HasTables(table.Depends) {
-				continue
-			}
-
-			record, err := fake.NewDummyRecord(table.Name, table.Column)
-			if err != nil {
-				log.Fatal().Err(err).Send()
-			}
-
-			columnNames := make(faker.ColumnNames, len(record))
-			values := make([]any, len(record))
-
-			keyValueIndex(record, func(i int, columnName faker.ColumnName, value any) {
-				columnNames[i] = columnName
-				values[i] = value
-			})
-
-			questions := repeat(len(table.Column), "?")
-			question := strings.Join(questions, ",")
-
-			query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames.ToStrings(), ","), question)
-
-			log.Info().Str("query", query).Any("values", values).Send()
-
-			if _, err := conn.ExecContext(context.Background(), query, values...); err != nil {
-				log.Fatal().Err(err).Send()
-			}
-
-			deletable = append(deletable, i)
+	for !queue.IsEmpty() {
+		table, err := queue.Pop()
+		if err != nil {
+			log.Fatal().Err(err).Send()
 		}
 
-		mutable.Reverse(deletable)
+		if !fake.HasTables(table.Depends) {
+			queue.Push(table)
+			continue
+		}
 
-		for _, d := range deletable {
-			queue = remove(queue, d)
+		record, err := fake.NewDummyRecord(table.Name, table.Column)
+		if err != nil {
+			log.Fatal().Err(err).Send()
+		}
+
+		columnNames := make(faker.ColumnNames, len(record))
+		values := make([]any, len(record))
+
+		keyValueIndex(record, func(i int, columnName faker.ColumnName, value any) {
+			columnNames[i] = columnName
+			values[i] = value
+		})
+
+		questions := repeat(len(table.Column), "?")
+		question := strings.Join(questions, ",")
+
+		query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames.ToStrings(), ","), question)
+
+		log.Info().Str("query", query).Any("values", values).Send()
+
+		if _, err := conn.ExecContext(context.Background(), query, values...); err != nil {
+			log.Fatal().Err(err).Send()
 		}
 	}
 }
@@ -93,10 +87,6 @@ func keyValueIndex[T comparable, V any](m map[T]V, fn func(idx int, key T, value
 		fn(idx, key, value)
 		idx++
 	}
-}
-
-func remove[T any](slice []T, s int) []T {
-	return append(slice[:s], slice[s+1:]...)
 }
 
 func repeat[T any](count int, v ...T) []T {
