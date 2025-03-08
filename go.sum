@@ -6,12 +6,12 @@ github.com/HMasataka/gofiles v0.0.0-20250302080934-80711e875bd5 h1:ECo4yoLxl+FW4
 github.com/HMasataka/gofiles v0.0.0-20250302080934-80711e875bd5/go.mod h1:zeSP9F2yN6voH7RrzRvGQK4bzwgFruzKCXUxDgXJYL8=
 github.com/HMasataka/perseus v0.0.0-20250307122520-eb540b06611e h1:cxWF01UN8xFqHhGyRpvWrJTIdQVm5+nj11llJYuthFQ=
 github.com/HMasataka/perseus v0.0.0-20250307122520-eb540b06611e/go.mod h1:wQTrOzgwK8xGFt+m+86oVIU+FNfQ0FXU/Rw7DtT+4Jc=
-github.com/HMasataka/ruin v0.0.0-20250305041336-db23932b5775 h1:aWeOx2uBTpNnkYBFTNzwsjP8LiQYOB/PSey3LKQf3s8=
-github.com/HMasataka/ruin v0.0.0-20250305041336-db23932b5775/go.mod h1:6qwcVhMYlKwAqfEPnUXLQt/2Qo1+SzWjuFf/ayzy0UI=
 github.com/HMasataka/ruin v0.0.0-20250307120546-eeace576dd69 h1:V8V5F7SW3PQoQc7jhHB8zR+vQXU/gMHNSBR0c0SThIQ=
 github.com/HMasataka/ruin v0.0.0-20250307120546-eeace576dd69/go.mod h1:6qwcVhMYlKwAqfEPnUXLQt/2Qo1+SzWjuFf/ayzy0UI=
 github.com/brianvoe/gofakeit/v7 v7.2.1 h1:AGojgaaCdgq4Adzrd2uWdbGNDyX6MWNhHdQBraNfOHI=
 github.com/brianvoe/gofakeit/v7 v7.2.1/go.mod h1:QXuPeBw164PJCzCUZVmgpgHJ3Llj49jSLVkKPMtxtxA=
+github.com/caarlos0/env/v9 v9.0.0 h1:SI6JNsOA+y5gj9njpgybykATIylrRMklbs5ch6wO6pc=
+github.com/caarlos0/env/v9 v9.0.0/go.mod h1:ye5mlCVMYh6tZ+vCgrs/B95sj88cg5Tlnc0XIzgZ020=
 github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

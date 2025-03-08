@@ -11,8 +11,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func newConn() (*sql.DB, error) {
-	db, err := faker.NewDataBaseConfig("db.toml")
+func newConn(cfg *faker.Config) (*sql.DB, error) {
+	db, err := faker.NewDataBaseConfig(cfg.DataBaseConfigFile)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +26,12 @@ func newConn() (*sql.DB, error) {
 }
 
 func main() {
-	conn, err := newConn()
+	cfg, err := faker.NewConfig()
+	if err != nil {
+		log.Fatal().Err(err).Send()
+	}
+
+	conn, err := newConn(cfg)
 	if err != nil {
 		log.Fatal().Err(err).Send()
 	}
@@ -36,7 +41,7 @@ func main() {
 		log.Fatal().Err(err).Send()
 	}
 
-	tables, err := faker.NewTables("tables")
+	tables, err := faker.NewTables(cfg.TablesDirectory)
 	if err != nil {
 		log.Fatal().Err(err).Send()
 	}
