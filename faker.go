@@ -9,6 +9,12 @@ import (
 	"github.com/samber/lo"
 )
 
+const (
+	FakeIt = "fakeit"
+	FK     = "fk"
+	Value  = "value"
+)
+
 func NewFaker() Faker {
 	return Faker{
 		db: make(DB),
@@ -50,19 +56,28 @@ func (f Faker) NewDummyRecord(tableName TableName, columns []Column) (Record, er
 
 func (f Faker) newDummyValue(valueType, keyword string) (any, error) {
 	switch valueType {
-	case "fakeit":
+	case FakeIt:
 		return gofakeit.Generate(keyword)
-	case "fk":
+	case FK:
 		sp := strings.Split(keyword, ":")
 
 		tableName, columnName := TableName(sp[0]), ColumnName(sp[1])
 		value := f.db[tableName][0][columnName] // TODO 2個目以降のレコードのサポート
 
 		return value, nil
-	case "value":
+	case Value:
+		return f.buildValue(keyword)
+	}
+
+	return nil, errors.New("unsupported value type")
+}
+
+func (f Faker) buildValue(keyword string) (any, error) {
+	switch keyword {
+	case "{now}":
 		value := time.Now()
 		return value, nil
 	}
 
-	return nil, errors.New("unsupported value type")
+	return nil, errors.New("unsupported keyword")
 }
