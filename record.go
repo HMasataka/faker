@@ -51,8 +51,8 @@ func (r Records) Len() int {
 	return len(r.Values)
 }
 
-func (r Records) GetByColumnName(columnName ColumnName) any {
-	return r.Values[0][r.ColumnNames.IndexOf(columnName)] // TODO 2個目以降のレコードのサポート
+func (r Records) GetByColumnName(idx int, columnName ColumnName) any {
+	return r.Values[idx][r.ColumnNames.IndexOf(columnName)]
 }
 
 func (r Records) GetLast() ([]any, error) {

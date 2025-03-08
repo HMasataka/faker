@@ -69,7 +69,7 @@ func (f Faker) newDummyValue(tableName TableName, column Column) (any, error) {
 		sp := strings.Split(column.Value, ":")
 
 		tn, columnName := TableName(sp[0]), ColumnName(sp[1])
-		value := f.db[tn].GetByColumnName(columnName)
+		value := f.db[tn].GetByColumnName(0, columnName) // TODO 2個目以降のレコードのサポート
 
 		return value, nil
 	case Value:
