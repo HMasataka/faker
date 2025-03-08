@@ -22,6 +22,10 @@ func newConn(cfg *faker.Config) (*sql.DB, error) {
 		return nil, err
 	}
 
+	if err := conn.Ping(); err != nil {
+		log.Fatal().Err(err).Send()
+	}
+
 	return conn, nil
 }
 
@@ -36,10 +40,6 @@ func main() {
 		log.Fatal().Err(err).Send()
 	}
 	defer conn.Close()
-
-	if err = conn.Ping(); err != nil {
-		log.Fatal().Err(err).Send()
-	}
 
 	tables, err := faker.NewTables(cfg.TablesDirectory)
 	if err != nil {
