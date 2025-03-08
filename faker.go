@@ -41,7 +41,7 @@ func (f Faker) NewDummyRecord(tableName TableName, columns []Column) (Record, er
 	record := make(Record)
 
 	for i := range columns {
-		value, err := f.newDummyValue(columns[i].ValueType, columns[i].Value)
+		value, err := f.newDummyValue(tableName, columns[i])
 		if err != nil {
 			return nil, err
 		}
@@ -54,30 +54,42 @@ func (f Faker) NewDummyRecord(tableName TableName, columns []Column) (Record, er
 	return record, nil
 }
 
-func (f Faker) newDummyValue(valueType, keyword string) (any, error) {
-	switch valueType {
+func (f Faker) newDummyValue(tableName TableName, column Column) (any, error) {
+	switch column.ValueType {
 	case FakeIt:
-		return gofakeit.Generate(keyword)
+		return gofakeit.Generate(column.Value)
 	case FK:
-		sp := strings.Split(keyword, ":")
+		sp := strings.Split(column.Value, ":")
 
-		tableName, columnName := TableName(sp[0]), ColumnName(sp[1])
-		value := f.db[tableName][0][columnName] // TODO 2個目以降のレコードのサポート
+		tn, columnName := TableName(sp[0]), ColumnName(sp[1])
+		value := f.db[tn][0][columnName] // TODO 2個目以降のレコードのサポート
 
 		return value, nil
 	case Value:
-		return f.buildValue(keyword)
+		return f.buildValue(tableName, column)
 	}
 
 	return nil, errors.New("unsupported value type")
 }
 
-func (f Faker) buildValue(keyword string) (any, error) {
-	switch keyword {
+func (f Faker) buildValue(tableName TableName, column Column) (any, error) {
+	switch column.Value {
 	case "{now}":
 		value := time.Now()
 		return value, nil
+	case "{increment}":
+		if _, ok := f.db[tableName]; !ok {
+			return 0, nil
+		}
+
+		if len(f.db[tableName]) == 0 {
+			return 0, nil
+		}
+
+		record := f.db[tableName][len(f.db[tableName])-1]
+
+		return record[column.Name].(int) + 1, nil
 	}
 
-	return keyword, nil
+	return column.Value, nil
 }
