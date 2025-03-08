@@ -79,5 +79,5 @@ func (f Faker) buildValue(keyword string) (any, error) {
 		return value, nil
 	}
 
-	return nil, errors.New("unsupported keyword")
+	return keyword, nil
 }
