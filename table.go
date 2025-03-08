@@ -38,8 +38,11 @@ type Tables struct {
 	Tables []*Table `toml:"tables"`
 }
 
+type WantType string
+
 type Table struct {
 	Name    TableName   `toml:"name"`
+	Want    int         `toml:"want"`
 	Depends []TableName `toml:"depends"`
 	Columns Columns     `toml:"columns"`
 }

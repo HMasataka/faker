@@ -9,6 +9,7 @@ import (
 	"github.com/HMasataka/faker"
 	"github.com/HMasataka/ruin"
 	"github.com/rs/zerolog/log"
+	"github.com/samber/lo"
 )
 
 func newConn(cfg *faker.Config) (*sql.DB, error) {
@@ -65,13 +66,13 @@ func main() {
 			log.Fatal().Err(err).Send()
 		}
 
-		columnNames, values := record.ColumnNames.ToStrings(), record.Values[0]
+		columnNames := record.ColumnNames.ToStrings()
 
-		query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames, ","), faker.BuildQuestionMarks(len(columnNames)))
+		query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES %v", table.Name, strings.Join(columnNames, ","), faker.BuildQuestionMarks(len(record.Values), len(columnNames)))
 
-		log.Info().Str("query", query).Any("values", values).Send()
+		log.Info().Str("query", query).Any("values", record.Values).Send()
 
-		if _, err := conn.ExecContext(context.Background(), query, values...); err != nil {
+		if _, err := conn.ExecContext(context.Background(), query, lo.Flatten(record.Values)...); err != nil {
 			log.Fatal().Err(err).Send()
 		}
 	}

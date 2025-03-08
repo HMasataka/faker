@@ -1,6 +1,7 @@
 [[tables]]
 name = 'user'
 depends = ['account']
+want = 1
 
 [[tables.columns]]
 name = 'id'

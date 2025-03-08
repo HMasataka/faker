@@ -1,0 +1,29 @@
+[[tables]]
+name = 'card'
+depends = ['user']
+want = 3
+
+[[tables.columns]]
+name = 'id'
+valueType = 'fakeit'
+value = '{digitn:36}'
+
+[[tables.columns]]
+name = 'type'
+valueType = 'value'
+value = 'text'
+
+[[tables.columns]]
+name = 'text'
+valueType = 'fakeit'
+value = '{paragraph}'
+
+[[tables.columns]]
+name = 'user_id'
+valueType = 'fk'
+value = 'user:id'
+
+[[tables.columns]]
+name = 'created_at'
+valueType = 'value'
+value = '{now}'

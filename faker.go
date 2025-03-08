@@ -1,6 +1,7 @@
 package faker
 
 import (
+	"crypto/rand"
 	"errors"
 	"strings"
 	"time"
@@ -42,12 +43,12 @@ func (f Faker) NewDummyRecords(table *Table) (*Records, error) {
 		ColumnNames: table.Columns.ToColumnNames(),
 	}
 
-	for i := range 1 {
+	for i := range f.CalcRange(table) {
 		values := make([]any, len(table.Columns))
 		records.Values = append(records.Values, values)
 
 		for columIndex := range table.Columns {
-			value, err := f.newDummyValue(i, table.Name, table.Columns[columIndex])
+			value, err := f.newDummyValue(i, table, table.Columns[columIndex])
 			if err != nil {
 				return nil, err
 			}
@@ -61,7 +62,7 @@ func (f Faker) NewDummyRecords(table *Table) (*Records, error) {
 	return &records, nil
 }
 
-func (f Faker) newDummyValue(idx int, tableName TableName, column Column) (any, error) {
+func (f Faker) newDummyValue(idx int, table *Table, column Column) (any, error) {
 	switch column.ValueType {
 	case FakeIt:
 		return gofakeit.Generate(column.Value)
@@ -69,22 +70,32 @@ func (f Faker) newDummyValue(idx int, tableName TableName, column Column) (any, 
 		sp := strings.Split(column.Value, ":")
 
 		tn, columnName := TableName(sp[0]), ColumnName(sp[1])
-		value := f.db[tn].GetByColumnName(f.getDependsRecordFromIndex(idx), columnName)
+		value := f.db[tn].GetByColumnName(f.getDependsRecordFromIndex(idx, table), columnName)
 
 		return value, nil
 	case Value:
-		return f.buildValue(tableName, column)
+		return f.buildValue(table.Name, column)
 	}
 
 	return nil, errors.New("unsupported value type")
 }
 
-func (f Faker) getDependsRecordFromIndex(idx int) int {
-	return 0
+func (f Faker) getDependsRecordFromIndex(idx int, table *Table) int {
+	if len(table.Depends) == 0 {
+		panic("depends is empty")
+	}
+
+	if len(table.Depends) == 1 {
+		return 0
+	}
+
+	return idx % len(table.Depends)
 }
 
 func (f Faker) buildValue(tableName TableName, column Column) (any, error) {
 	switch column.Value {
+	case "{randomString}":
+		return rand.Text(), nil
 	case "{now}":
 		value := time.Now()
 		return value, nil
@@ -108,4 +119,12 @@ func (f Faker) buildValue(tableName TableName, column Column) (any, error) {
 	}
 
 	return column.Value, nil
+}
+
+func (f Faker) CalcRange(table *Table) int {
+	if len(table.Depends) == 0 {
+		return table.Want
+	}
+
+	return len(table.Depends) * table.Want
 }

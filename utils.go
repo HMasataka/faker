@@ -1,11 +1,18 @@
 package faker
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/HMasataka/perseus"
 )
 
-func BuildQuestionMarks(n int) string {
-	return strings.Join(perseus.Repeat(n, "?"), ",")
+func BuildQuestionMarks(numRecords, numColumns int) string {
+	r := fmt.Sprintf("(%v)", strings.Join(perseus.Repeat(numColumns, "?"), ","))
+
+	if numRecords == 1 {
+		return r
+	}
+
+	return strings.Join(perseus.Repeat(numRecords, r), ",")
 }
