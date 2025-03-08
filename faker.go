@@ -93,7 +93,11 @@ func (f Faker) buildValue(tableName TableName, column Column) (any, error) {
 			return 0, nil
 		}
 
-		record := f.db[tableName].Values[len(f.db[tableName].Values)-1]
+		record, err := f.db[tableName].GetLast()
+		if err != nil {
+			return 0, err
+		}
+
 		columnNames := f.db[tableName].ColumnNames
 
 		return record[columnNames.IndexOf(column.Name)].(int) + 1, nil
