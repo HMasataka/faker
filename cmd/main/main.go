@@ -60,14 +60,14 @@ func main() {
 			continue
 		}
 
-		record, err := fake.NewDummyRecord(table.Name, table.Column)
+		record, err := fake.NewDummyRecords(table.Name, table.Column)
 		if err != nil {
 			log.Fatal().Err(err).Send()
 		}
 
-		columnNames, values := faker.ToColumnNamesAndValues(record)
+		columnNames, values := record.ColumnNames.ToStrings(), record.Values[0]
 
-		query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames.ToStrings(), ","), faker.BuildQuestionMarks(len(columnNames)))
+		query := fmt.Sprintf("INSERT INTO `%v` (%v) VALUES (%v)", table.Name, strings.Join(columnNames, ","), faker.BuildQuestionMarks(len(columnNames)))
 
 		log.Info().Str("query", query).Any("values", values).Send()
 

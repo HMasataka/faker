@@ -1,7 +1,5 @@
 package faker
 
-import "github.com/HMasataka/perseus"
-
 type TableName string
 
 type ColumnName string
@@ -15,6 +13,16 @@ func (c ColumnNames) ToStrings() []string {
 	}
 
 	return s
+}
+
+func (c ColumnNames) IndexOf(columnName ColumnName) int {
+	for i := range c {
+		if c[i] == columnName {
+			return i
+		}
+	}
+
+	return -1
 }
 
 type DB map[TableName]Records
@@ -34,18 +42,15 @@ func (d DB) HasAll(keys []TableName) bool {
 	return true
 }
 
-type Records []Record
-type Record map[ColumnName]any
+type Records struct {
+	ColumnNames ColumnNames
+	Values      [][]any
+}
 
-func ToColumnNamesAndValues(record Record) (ColumnNames, []any) {
-	columnNames := make(ColumnNames, len(record))
-	values := make([]any, len(record))
+func (r Records) Len() int {
+	return len(r.Values)
+}
 
-	withIndex := perseus.WithIndex(record)
-	for kv := range withIndex {
-		columnNames[kv.Index] = kv.Key
-		values[kv.Index] = kv.Value
-	}
-
-	return columnNames, values
+func (r Records) GetByColumnName(columnName ColumnName) any {
+	return r.Values[0][r.ColumnNames.IndexOf(columnName)] // TODO 2個目以降のレコードのサポート
 }

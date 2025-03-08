@@ -49,3 +49,15 @@ type Column struct {
 	ValueType string     `toml:"valueType"`
 	Value     string     `toml:"value"`
 }
+
+type Columns []Column
+
+func (c Columns) ToColumnNames() ColumnNames {
+	names := make(ColumnNames, len(c))
+
+	for i := range c {
+		names[i] = c[i].Name
+	}
+
+	return names
+}

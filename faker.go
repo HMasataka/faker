@@ -37,21 +37,28 @@ func (f Faker) GetTables() []TableName {
 	return lo.Keys(f.db)
 }
 
-func (f Faker) NewDummyRecord(tableName TableName, columns []Column) (Record, error) {
-	record := make(Record)
-
-	for i := range columns {
-		value, err := f.newDummyValue(tableName, columns[i])
-		if err != nil {
-			return nil, err
-		}
-
-		record[columns[i].Name] = value
+func (f Faker) NewDummyRecords(tableName TableName, columns Columns) (*Records, error) {
+	records := Records{
+		ColumnNames: columns.ToColumnNames(),
 	}
 
-	f.db[tableName] = append(f.db[tableName], record)
+	for i := range 1 {
+		values := make([]any, len(columns))
+		records.Values = append(records.Values, values)
 
-	return record, nil
+		for columIndex := range columns {
+			value, err := f.newDummyValue(tableName, columns[columIndex])
+			if err != nil {
+				return nil, err
+			}
+
+			records.Values[i][columIndex] = value
+		}
+	}
+
+	f.db[tableName] = records
+
+	return &records, nil
 }
 
 func (f Faker) newDummyValue(tableName TableName, column Column) (any, error) {
@@ -62,7 +69,7 @@ func (f Faker) newDummyValue(tableName TableName, column Column) (any, error) {
 		sp := strings.Split(column.Value, ":")
 
 		tn, columnName := TableName(sp[0]), ColumnName(sp[1])
-		value := f.db[tn][0][columnName] // TODO 2個目以降のレコードのサポート
+		value := f.db[tn].GetByColumnName(columnName)
 
 		return value, nil
 	case Value:
@@ -82,13 +89,14 @@ func (f Faker) buildValue(tableName TableName, column Column) (any, error) {
 			return 0, nil
 		}
 
-		if len(f.db[tableName]) == 0 {
+		if f.db[tableName].Len() == 0 {
 			return 0, nil
 		}
 
-		record := f.db[tableName][len(f.db[tableName])-1]
+		record := f.db[tableName].Values[len(f.db[tableName].Values)-1]
+		columnNames := f.db[tableName].ColumnNames
 
-		return record[column.Name].(int) + 1, nil
+		return record[columnNames.IndexOf(column.Name)].(int) + 1, nil
 	}
 
 	return column.Value, nil
