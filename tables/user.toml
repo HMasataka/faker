@@ -2,22 +2,22 @@
 name = 'user'
 depends = ['account']
 
-[[tables.column]]
+[[tables.columns]]
 name = 'id'
 valueType = 'fk'
 value = 'account:user_id'
 
-[[tables.column]]
+[[tables.columns]]
 name = 'name'
 valueType = 'fakeit'
 value = '{name}'
 
-[[tables.column]]
+[[tables.columns]]
 name = 'icon'
 valueType = 'fakeit'
 value = '{url}'
 
-[[tables.column]]
+[[tables.columns]]
 name = 'created_at'
 valueType = 'value'
 value = '{now}'

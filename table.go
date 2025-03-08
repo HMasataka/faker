@@ -41,7 +41,7 @@ type Tables struct {
 type Table struct {
 	Name    TableName   `toml:"name"`
 	Depends []TableName `toml:"depends"`
-	Column  []Column    `toml:"column"`
+	Columns Columns     `toml:"columns"`
 }
 
 type Column struct {

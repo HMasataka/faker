@@ -1,17 +1,17 @@
 [[tables]]
 name = 'account'
 
-[[tables.column]]
+[[tables.columns]]
 name = 'user_id'
 valueType = 'fakeit'
 value = '{digitn:36}'
 
-[[tables.column]]
+[[tables.columns]]
 name = 'firebase_id'
 valueType = 'fakeit'
 value = '{digitn:36}'
 
-[[tables.column]]
+[[tables.columns]]
 name = 'created_at'
 valueType = 'value'
 value = '{now}'

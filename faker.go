@@ -37,17 +37,17 @@ func (f Faker) GetTables() []TableName {
 	return lo.Keys(f.db)
 }
 
-func (f Faker) NewDummyRecords(tableName TableName, columns Columns) (*Records, error) {
+func (f Faker) NewDummyRecords(table *Table) (*Records, error) {
 	records := Records{
-		ColumnNames: columns.ToColumnNames(),
+		ColumnNames: table.Columns.ToColumnNames(),
 	}
 
 	for i := range 1 {
-		values := make([]any, len(columns))
+		values := make([]any, len(table.Columns))
 		records.Values = append(records.Values, values)
 
-		for columIndex := range columns {
-			value, err := f.newDummyValue(tableName, columns[columIndex])
+		for columIndex := range table.Columns {
+			value, err := f.newDummyValue(i, table.Name, table.Columns[columIndex])
 			if err != nil {
 				return nil, err
 			}
@@ -56,12 +56,12 @@ func (f Faker) NewDummyRecords(tableName TableName, columns Columns) (*Records, 
 		}
 	}
 
-	f.db[tableName] = records
+	f.db[table.Name] = records
 
 	return &records, nil
 }
 
-func (f Faker) newDummyValue(tableName TableName, column Column) (any, error) {
+func (f Faker) newDummyValue(idx int, tableName TableName, column Column) (any, error) {
 	switch column.ValueType {
 	case FakeIt:
 		return gofakeit.Generate(column.Value)
@@ -69,7 +69,7 @@ func (f Faker) newDummyValue(tableName TableName, column Column) (any, error) {
 		sp := strings.Split(column.Value, ":")
 
 		tn, columnName := TableName(sp[0]), ColumnName(sp[1])
-		value := f.db[tn].GetByColumnName(0, columnName) // TODO 2個目以降のレコードのサポート
+		value := f.db[tn].GetByColumnName(f.getDependsRecordFromIndex(idx), columnName)
 
 		return value, nil
 	case Value:
@@ -77,6 +77,10 @@ func (f Faker) newDummyValue(tableName TableName, column Column) (any, error) {
 	}
 
 	return nil, errors.New("unsupported value type")
+}
+
+func (f Faker) getDependsRecordFromIndex(idx int) int {
+	return 0
 }
 
 func (f Faker) buildValue(tableName TableName, column Column) (any, error) {

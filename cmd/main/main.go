@@ -60,7 +60,7 @@ func main() {
 			continue
 		}
 
-		record, err := fake.NewDummyRecords(table.Name, table.Column)
+		record, err := fake.NewDummyRecords(table)
 		if err != nil {
 			log.Fatal().Err(err).Send()
 		}
